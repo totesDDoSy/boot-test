@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <th:block layout:include="fragments/header :: header" th:with="title='Hello World Example'">
+
+    </th:block>
+
+</head>
+<body>
+
+<th:block layout:include="fragments/navbar :: navbar"></th:block>
+<script src="../../javascript/navbar.js"></script>
+
+<div class="container">
+	<span th:text="'<h2>Ping Output: ' + ${output}" ></span>
+</div>
+</body>
+</html>

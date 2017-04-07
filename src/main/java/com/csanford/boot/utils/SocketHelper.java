@@ -19,29 +19,29 @@ public class SocketHelper
 
     public SocketHelper( int port, String serverName )
     {
-	try
-	{
-	    socket = new Socket( serverName, port );
-	}
-	catch ( IOException ex )
-	{
-	    LOG.severe( ex.getLocalizedMessage() );
-	}
+		try
+		{
+			socket = new Socket( serverName, port );
+		}
+		catch ( IOException ex )
+		{
+			LOG.severe( ex.getLocalizedMessage() );
+		}
     }
 
     public PrintWriter getWriter()
     {
-	PrintWriter writer = null;
-	try
-	{
-	    writer = new PrintWriter( socket.getOutputStream(), true );
-	}
-	catch ( IOException ex )
-	{
-	    LOG.severe( ex.getLocalizedMessage() );
-	}
+		PrintWriter writer = null;
+		try
+		{
+			writer = new PrintWriter( socket.getOutputStream(), true );
+		}
+		catch ( IOException ex )
+		{
+			LOG.severe( ex.getLocalizedMessage() );
+		}
 
-	return writer;
+		return writer;
     }
 
     public BufferedReader getReader()
