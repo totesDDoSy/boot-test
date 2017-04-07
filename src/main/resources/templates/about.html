@@ -1,0 +1,47 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+
+    <th:block layout:include="fragments/header :: header" th:with="title='Hello World Example'">
+
+    </th:block>
+
+</head>
+<body>
+
+<th:block layout:include="fragments/navbar :: navbar"></th:block>
+<script src="../../javascript/navbar.js"></script>
+
+<div class="container">
+
+    <div class="starter-template">
+	<h1>About</h1>
+	<table class="table table-striped">
+	    <thead>
+		<tr>
+		    <td>Name</td>
+		    <td>Version</td>
+		</tr>
+	    </thead>
+	    <tbody>
+		<tr>
+		    <td>Boot-Test</td>
+		    <td><span th:text="${version}"></span></td>
+		</tr>
+		<tr>
+		    <td>Spring-Boot Example</td>
+		    <td><a href="https://www.mkyong.com/spring-boot/spring-boot-hello-world-example-thymeleaf/" target="_blank">Link</a></td>
+		</tr>
+		<tr>
+		    <td>Bootstrap Reference</td>
+		    <td><a href="https://www.w3schools.com/bootstrap/bootstrap_tables.asp" target="_blank">Link</a></td>
+		</tr>
+	    </tbody>
+	</table>
+    </div>
+
+</div>
+<!-- /.container -->
+
+</body>
+</html>

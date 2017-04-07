@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+    <th:block layout:include="fragments/header :: header" th:with="title='Hello World Example'"></th:block>
+</head>
+<body>
+
+<th:block layout:include="fragments/navbar :: navbar"></th:block>
+<script src="../../javascript/navbar.js"></script>
+
+<div class="container">
+
+    <div class="starter-template">
+	<h1>Spring Boot Web Thymeleaf Example</h1>
+	<h2>
+	    <span th:text="'Fill me in'"></span>
+	</h2>
+    </div>
+
+</div>
+<!-- /.container -->
+
+</body>
+</html>
