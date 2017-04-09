@@ -4,6 +4,7 @@ import com.csanford.boot.utils.SocketHelper;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.util.StringJoiner;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -64,11 +65,14 @@ public class TelnetController
 			return "ERROR";
 		}
                 
-                StringBuilder builder = new StringBuilder();
-                for( int i = 0; i < 3; i++ )
+                StringJoiner joiner = new StringJoiner("<br />");
+                String line;
+                do
                 {
-                    builder.append( reader.readLine() );
-                }
-		return builder.toString();
+                    line = reader.readLine();
+                    joiner.add( line );
+                    System.out.println( line );
+                } while ( !line.contains("6)...Logout") );
+		return joiner.toString();
     }
 }
