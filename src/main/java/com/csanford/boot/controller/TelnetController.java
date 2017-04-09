@@ -1,5 +1,7 @@
 package com.csanford.boot.controller;
 
+import com.csanford.boot.database.Outlet;
+import com.csanford.boot.database.OutletRepository;
 import com.csanford.boot.database.RPC;
 import com.csanford.boot.database.RPCRepository;
 import com.csanford.boot.utils.SocketHelper;
@@ -7,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.StringJoiner;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,9 @@ public class TelnetController
     @Autowired
     RPCRepository rpcRepository;
 
+    @Autowired
+    OutletRepository outletRepository;
+
     @Value( value = "${telnet.server}" )
     private final String server = "127.0.0.1";
 
@@ -49,9 +53,16 @@ public class TelnetController
 	return "telnet";
     }
 
-    @RequestMapping( "/{rpcid}/" )
-    public String displaySockets( String rpcid, Model model )
+    @RequestMapping( "/{rpcid}/sockets" )
+    public String displaySockets( Long rpcId, Model model )
     {
+	outletRepository.save( new Outlet( 1L, 1L, "outlet 1", Boolean.FALSE ) );
+	outletRepository.save( new Outlet( 2L, 1L, "outlet 2", Boolean.FALSE ) );
+
+	ArrayList<Outlet> outlets = new ArrayList<>();
+	outletRepository.findByRpcId( rpcId ).forEach(
+		outlets::add );
+	model.addAttribute( "outletlist", outlets );
 	return "sockets";
     }
 

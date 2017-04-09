@@ -15,8 +15,8 @@ public class Outlet implements Serializable
 {
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
-    private long id;
-    private long rpc_id;
+    private Long id;
+    private Long rpcId;
     private String name;
     private Boolean status; // true is on, false is off
 
@@ -24,32 +24,32 @@ public class Outlet implements Serializable
     {
     }
 
-    public Outlet( long id, long rpc_id, String name, Boolean status )
+    public Outlet( Long id, Long rpcId, String name, Boolean status )
     {
 	this.id = id;
-	this.rpc_id = rpc_id;
+	this.rpcId = rpcId;
 	this.name = name;
 	this.status = status;
     }
 
-    public long getId()
+    public Long getId()
     {
 	return id;
     }
 
-    public void setId( long id )
+    public void setId( Long id )
     {
 	this.id = id;
     }
 
-    public long getRpc_id()
+    public Long getRpcId()
     {
-	return rpc_id;
+	return rpcId;
     }
 
-    public void setRpc_id( long rpc_id )
+    public void setRpcId( Long rpcId )
     {
-	this.rpc_id = rpc_id;
+	this.rpcId = rpcId;
     }
 
     public String getName()
@@ -76,7 +76,7 @@ public class Outlet implements Serializable
     public String toString()
     {
 	String translatedStatus = this.status ? "ON" : "OFF";
-	return "Outlet[id=" + this.id + ", rpc_id=" + this.rpc_id
+	return "Outlet[id=" + this.id + ", rpc_id=" + this.rpcId
 		+ ", name=" + this.name + ", status=" + translatedStatus + "]";
     }
 

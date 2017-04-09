@@ -8,4 +8,30 @@ and open the template in the editor.
     <head>
     <th:block layout:include="fragments/header :: header" th:with="title='Sockets'"></th:block>
 </head>
+<body>
+    <div class="container">
+	<div class="container" th:if="${outletlist != null}">
+	    <table class="table table-hover table-responsive">
+		<thead>
+		    <tr>
+			<td>ID</td>
+			<td>Name</td>
+		    </tr>
+		</thead>
+		<tbody>
+		    <tr th:each="rpc  : ${rpclist}">
+			<td th:text="${rpc.id}">0</td>
+			<td th:text="${rpc.name}">Name</td>
+			<td th:text="${rpc.ipaddr}">IP</td>
+			<td>
+			    <div class="btn-group btn-block">
+				<button type="button" class="btn btn-primary">Edit</button>
+				<button type="button" class="btn btn-danger">&times;</button>
+			    </div>
+			</td>
+		    </tr>
+		</tbody>
+	    </table>
+	</div>
+</body>
 </html>
