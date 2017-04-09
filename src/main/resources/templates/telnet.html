@@ -7,16 +7,39 @@
 
 <th:block layout:include="fragments/navbar :: navbar"></th:block>
 <script src="../../javascript/navbar.js"></script>
+<script src="../../javascript/telnetRPC.js"></script>
 
 <div class="container">
 
     <div class="starter-template">
 	<h1>Spring Boot Web Thymeleaf Example</h1>
-	<h2>
-	    <span th:text="'Fill me in'"></span>
-	</h2>
     </div>
 
+    <div class="container" th:if="${rpclist != null}">
+	<table class="table table-hover table-responsive">
+	    <thead>
+		<tr>
+		    <td>ID</td>
+		    <td>Name</td>
+		    <td>IP</td>
+		    <td>&nbsp;</td>
+		</tr>
+	    </thead>
+	    <tbody>
+		<tr th:each="rpc  : ${rpclist}">
+		    <td th:text="${rpc.id}">0</td>
+		    <td th:text="${rpc.name}">Name</td>
+		    <td th:text="${rpc.ipaddr}">IP</td>
+		    <td>
+			<div class="btn-group btn-block">
+			    <button type="button" class="btn btn-primary">Edit</button>
+			    <button type="button" class="btn btn-danger">&times;</button>
+			</div>
+		    </td>
+		</tr>
+	    </tbody>
+	</table>
+    </div>
 </div>
 <!-- /.container -->
 
