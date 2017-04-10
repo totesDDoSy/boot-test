@@ -14,5 +14,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface OutletRepository extends CrudRepository<Outlet, Long>
 {
-    List<Outlet> findByRpcId( Long rpcId );
+    List<Outlet> findByRpc( RPC rpc );
 }

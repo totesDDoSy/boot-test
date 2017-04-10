@@ -14,7 +14,7 @@ $(document).ready(function () {
 		$('#telnetlink').addClass('active').children('a').first().attr('href', '#');
 		break;
 	    default:
-		console.log("URL: " + url);
+		console.log( "url not matched in navbar" );
 	}
     }
 });

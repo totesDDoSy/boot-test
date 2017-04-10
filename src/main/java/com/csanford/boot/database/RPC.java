@@ -1,10 +1,13 @@
 package com.csanford.boot.database;
 
 import java.io.Serializable;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 /**
  *
@@ -22,22 +25,16 @@ public class RPC implements Serializable
     private String username;
     private String password;
 
+	@OneToMany(mappedBy = "rpc", cascade = CascadeType.ALL)
+	private Set<Outlet> outlets;
+
     protected RPC()
     {
     }
 
-    public RPC( String name, String ipaddr )
+    public RPC( String name, String ipaddr, String username,
+	    String password)
     {
-	this.name = name;
-	this.ipaddr = ipaddr;
-	this.username = "";
-	this.password = "";
-    }
-
-    public RPC( Long id, String name, String ipaddr, String username,
-	    String password )
-    {
-	this.id = id;
 	this.name = name;
 	this.ipaddr = ipaddr;
 	this.username = username;
@@ -94,12 +91,24 @@ public class RPC implements Serializable
 	this.password = password;
     }
 
+	public Set<Outlet> getOutlets()
+	{
+		return outlets;
+	}
+
+	public void setOutlets( Set<Outlet> outlets )
+	{
+		this.outlets = outlets;
+	}
+
+
+
     @Override
     public String toString()
     {
 	return String.format(
-		"RPC[id=%d, name='%s', ipaddr='%s', username='%s', password='%s']",
-		id, name, ipaddr, username, password );
+		"RPC[id=%d, name='%s', ipaddr='%s', username='%s', password='%s', outlets=%s]",
+		id, name, ipaddr, username, password, outlets );
     }
 
 }

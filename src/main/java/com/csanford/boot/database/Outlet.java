@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 /**
  *
@@ -16,7 +18,11 @@ public class Outlet implements Serializable
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private Long id;
-    private Long rpcId;
+	private Long outletId;
+
+	@ManyToOne
+	@JoinColumn( name = "rpc_id")
+    private RPC rpc;
     private String name;
     private Boolean status; // true is on, false is off
 
@@ -24,10 +30,10 @@ public class Outlet implements Serializable
     {
     }
 
-    public Outlet( Long id, Long rpcId, String name, Boolean status )
+    public Outlet( Long outletId, RPC rpc, String name, Boolean status )
     {
-	this.id = id;
-	this.rpcId = rpcId;
+	this.outletId = outletId;
+	this.rpc = rpc;
 	this.name = name;
 	this.status = status;
     }
@@ -42,14 +48,24 @@ public class Outlet implements Serializable
 	this.id = id;
     }
 
-    public Long getRpcId()
+	public Long getOutletId()
+	{
+		return outletId;
+	}
+
+	public void setOutletId( Long outletId )
+	{
+		this.outletId = outletId;
+	}
+
+    public RPC getRpc()
     {
-	return rpcId;
+	return rpc;
     }
 
-    public void setRpcId( Long rpcId )
+    public void setRpc( RPC rpc )
     {
-	this.rpcId = rpcId;
+	this.rpc = rpc;
     }
 
     public String getName()
@@ -76,7 +92,7 @@ public class Outlet implements Serializable
     public String toString()
     {
 	String translatedStatus = this.status ? "ON" : "OFF";
-	return "Outlet[id=" + this.id + ", rpc_id=" + this.rpcId
+	return "Outlet[id=" + this.id + ", rpc_id=" + this.rpc.getId()
 		+ ", name=" + this.name + ", status=" + translatedStatus + "]";
     }
 

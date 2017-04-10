@@ -13,7 +13,7 @@ $(document).ready(function ()
 	$('tr').on('click', function ()
 	{
 	    let id = $(this).children().first().text();
-	    window.location.href = '/telnet/' + id + '/sockets';
+	    window.location.href = '/telnet/outlets/' + id;
 	});
     }
 });

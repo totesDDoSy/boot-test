@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+	<th:block layout:include="fragments/header :: header" th:with="title='Outlets'"></th:block>
+</head>
+<body>
+	<div class="container">
+		<div class="starter-template">
+			<h1>Spring Boot Web Thymeleaf Example</h1>
+		</div>
+		<div class="container" th:if="${outletlist != null}">
+			<table class="table table-hover table-responsive">
+				<thead>
+					<tr>
+						<td>ID</td>
+						<td>Name</td>
+						<td>Status</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="outlet  : ${outletlist}">
+						<td th:text="${outlet.outletId}">0</td>
+						<td th:text="${outlet.name}">Name</td>
+						<td th:text="${outlet.status}">TRUE</td>
+					</tr>
+				</tbody>
+			</table>
+			<div class="btn-group">
+				<button class="btn btn-primary">Turn On</button>
+				<button class="btn btn-danger">Turn Off</button>
+				<button class="btn btn-default">Reboot</button>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

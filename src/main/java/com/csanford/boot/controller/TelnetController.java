@@ -9,12 +9,15 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.StringJoiner;
 import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -25,90 +28,127 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping( "/telnet" )
 public class TelnetController
 {
-    private static final Logger LOG = Logger.getLogger( TelnetController.class.
-	    getName() );
-    private SocketHelper telnetHelper;
 
-    @Autowired
-    RPCRepository rpcRepository;
+	private static final Logger LOG = Logger.getLogger( TelnetController.class.
+		getName() );
+	private SocketHelper telnetHelper;
+	private Boolean addedDb = false;
 
-    @Autowired
-    OutletRepository outletRepository;
+	@Autowired
+	RPCRepository rpcRepository;
 
-    @Value( value = "${telnet.server}" )
-    private final String server = "127.0.0.1";
+	@Autowired
+	OutletRepository outletRepository;
 
-    @RequestMapping( "" )
-    public String display( Model model )
-    {
-	// Display the list of RPCs
-	rpcRepository.save( new RPC( 1L, "rpc1", "127.0.0.1", "user1",
-		"password" ) );
-	rpcRepository.save( new RPC( 2L, "rpc2", "192.168.1.0", "user",
-		"pass" ) );
+	@Value( value = "${telnet.server}" )
+	private final String server = "127.0.0.1";
 
-	ArrayList<RPC> rpcs = new ArrayList<>();
-	rpcRepository.findAll().forEach( rpcs::add );
-	model.addAttribute( "rpclist", rpcs );
-	return "telnet";
-    }
-
-    @RequestMapping( "/{rpcid}/sockets" )
-    public String displaySockets( Long rpcId, Model model )
-    {
-	outletRepository.save( new Outlet( 1L, 1L, "outlet 1", Boolean.FALSE ) );
-	outletRepository.save( new Outlet( 2L, 1L, "outlet 2", Boolean.FALSE ) );
-
-	ArrayList<Outlet> outlets = new ArrayList<>();
-	outletRepository.findByRpcId( rpcId ).forEach(
-		outlets::add );
-	model.addAttribute( "outletlist", outlets );
-	return "sockets";
-    }
-
-    @RequestMapping( "/{port}/{server}" )
-    public String displayPing( Integer port, String server, Model model )
-    {
-	String output = "Error";
-	try
+	@RequestMapping( "" )
+	public String display( Model model )
 	{
-	    output = doTelnetStuff( 23, "192.168.99.24", "" );
-	}
-	catch ( IOException ex )
-	{
-	    LOG.log( Logger.Level.ERROR, ex );
-	}
-	model.addAttribute( "output", output );
-	return "ping";
-    }
+		// Display the list of RPCs
+		if( !addedDb )
+		{
+			//databaseSetup();
+			addedDb = true;
+		}
 
-    private String doTelnetStuff( Integer port, String rpc_server,
-	    String... commands ) throws IOException
-    {
-	if ( telnetHelper == null )
-	{
-	    telnetHelper = new SocketHelper( port, rpc_server );
-	}
-	BufferedWriter writer = telnetHelper.getWriter();
-	BufferedReader reader = telnetHelper.getReader();
-
-	if ( writer != null && reader != null )
-	{
-	    //	telnetWriter.println( "ping" );
-	}
-	else
-	{
-	    return "ERROR";
+		ArrayList<RPC> rpcs = new ArrayList<>();
+		rpcRepository.findAll().forEach( rpcs::add );
+		model.addAttribute( "rpclist", rpcs );
+		return "telnet";
 	}
 
-	StringJoiner joiner = new StringJoiner( " " );
-	String line;
-	do
+	@RequestMapping( "/outlets/{rpcid}" )
+	public String displayOutlets( @PathVariable(value="rpcid") Long rpcId, Model model )
 	{
-	    line = reader.readLine();
-	    joiner.add( line );
-	    System.out.println( line );
-	} while ( !line.contains( "6)...Logout" ) );
-	return joiner.toString();
-    }
+
+		ArrayList<Outlet> outlets = new ArrayList<>();
+		outletRepository.findByRpc( rpcRepository.findOne( rpcId ) )
+			.stream()
+			.sorted( (o1, o2) -> o1.getOutletId().compareTo( o2.getOutletId() ) )
+			.forEach(
+				outlets::add
+			);
+		model.addAttribute( "outletlist", outlets );
+		return "outlets";
+	}
+
+	@RequestMapping( "/garbageportgarbagedontgohere/dummy" )
+	public String displayPing( Integer port, String server, Model model )
+	{
+		String output = "Error";
+		try
+		{
+			output = doTelnetStuff( 23, "192.168.99.24", "" );
+		}
+		catch ( IOException ex )
+		{
+			LOG.log( Logger.Level.ERROR, ex );
+		}
+		model.addAttribute( "output", output );
+		return "ping";
+	}
+
+	private String doTelnetStuff( Integer port, String rpc_server,
+		String... commands ) throws IOException
+	{
+		if ( telnetHelper == null )
+		{
+			telnetHelper = new SocketHelper( port, rpc_server );
+		}
+		BufferedWriter writer = telnetHelper.getWriter();
+		BufferedReader reader = telnetHelper.getReader();
+
+		if ( writer != null && reader != null )
+		{
+			//	telnetWriter.println( "ping" );
+		}
+		else
+		{
+			return "ERROR";
+		}
+
+		StringJoiner joiner = new StringJoiner( " " );
+		String line;
+		do
+		{
+			line = reader.readLine();
+			joiner.add( line );
+			System.out.println( line );
+		}
+		while ( !line.contains( "6)...Logout" ) );
+		return joiner.toString();
+	}
+
+	private void databaseSetup()
+	{
+		rpcRepository.deleteAll();
+		outletRepository.deleteAll();
+
+		RPC rpc1 = new RPC( "rpc1", "192.168.1.1", "user", "password" );
+		RPC rpc2 = new RPC( "rpc2", "192.168.1.2", "user", "pass");
+
+		// new Outlet( id, outletid, rpcid, name, on/off )
+		Set<Outlet> outlets1 = new HashSet<>();
+		outlets1.add( new Outlet( 1L, rpc1, "outlet 1", Boolean.FALSE ) );
+		outlets1.add( new Outlet(2L, rpc1, "outlet 2", Boolean.FALSE ) );
+		outlets1.add(new Outlet( 3L, rpc1, "outlet 3", Boolean.FALSE ) );
+		outlets1.add(new Outlet( 4L, rpc1, "outlet 4", Boolean.FALSE ) );
+		outlets1.add(new Outlet( 5L, rpc1, "outlet 5", Boolean.FALSE ) );
+		outlets1.add( new Outlet( 6L, rpc1, "outlet 6", Boolean.FALSE ) );
+		rpc1.setOutlets( outlets1 );
+
+		rpcRepository.save( rpc1 );
+
+		Set<Outlet> outlets2 = new HashSet<>();
+		outlets2.add( new Outlet( 1L, rpc2, "outlet 1", Boolean.FALSE ) );
+		outlets2.add( new Outlet( 2L, rpc2, "outlet 2", Boolean.FALSE ) );
+		outlets2.add( new Outlet( 3L, rpc2, "outlet 3", Boolean.FALSE ) );
+		outlets2.add( new Outlet( 4L, rpc2, "outlet 4", Boolean.FALSE ) );
+		outlets2.add( new Outlet( 5L, rpc2, "outlet 5", Boolean.FALSE ) );
+		outlets2.add( new Outlet( 6L, rpc2, "outlet 6", Boolean.FALSE ) );
+		rpc2.setOutlets( outlets2 );
+		rpcRepository.save( rpc2 );
+	}
 }
